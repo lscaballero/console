@@ -1,47 +1,126 @@
-# moodle-php-apache: A Moodle PHP Environment
+Crear imagen docker (solo la primera vez): 
+sudo docker build -t m-u .
 
-A Moodle PHP environment configured for Moodle development based on [Official PHP Images](https://hub.docker.com/_/php/).
+levantar ambiente de desarrollo: 
+sudo docker-compose -f ./docker-compose.yml up -d
 
-### Versions
+Descargamos la siguiente versión de moodle:
+https://download.moodle.org/download.php/direct/stable38/moodle-latest-38.zip
+copiamos el config.php en nuestro moodle    
+        cp docker/compartida/config.php moodle/sitio/
 
-| PHP Version  | Variant | Tags             | Status | Notes |
-|--------------|---------|------------------|--------|-------|
-| PHP 7.4      | Buster  | 7.4, 7.4-buster  | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.4-buster)](https://travis-ci.org/moodlehq/moodle-php-apache)|
-| PHP 7.3      | Buster  | 7.3, 7.3-buster  | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.3-buster)](https://travis-ci.org/moodlehq/moodle-php-apache)|
-| PHP 7.2      | Buster  | 7.2, 7.2-buster  | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.2-buster)](https://travis-ci.org/moodlehq/moodle-php-apache)|
-| PHP 7.1      | Buster  | 7.1, 7.1-buster  | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.1-buster)](https://travis-ci.org/moodlehq/moodle-php-apache)|PHP 7.1 EOL|
-| PHP 7.3      | Stretch | 7.3-stretch      | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.3-stretch)](https://travis-ci.org/moodlehq/moodle-php-apache)|Stretch EOL|
-| PHP 7.2      | Stretch | 7.2-stretch      | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.2-stretch)](https://travis-ci.org/moodlehq/moodle-php-apache)|Stretch EOL|
-| PHP 7.1      | Stretch | 7.1-stretch      | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.1-stretch)](https://travis-ci.org/moodlehq/moodle-php-apache)|Stretch and PHP 7.1 EOL|
-| PHP 7.0      | Stretch | 7.0, 7.0-stretch | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.0-stretch)](https://travis-ci.org/moodlehq/moodle-php-apache)|Stretch and PHP 7.0 EOL|
-| PHP 5.6      | Stretch | 5.6, 5.6-stretch | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=5.6-stretch)](https://travis-ci.org/moodlehq/moodle-php-apache)|Stretch and PHP 5.6 EOL|
-| PHP 7.1      | Jessie  | 7.1-jessie       | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.1-jessie)](https://travis-ci.org/moodlehq/moodle-php-apache)|Jessie and PHP 7.1 EOL|
-| PHP 7.0      | Jessie  | 7.0-jessie       | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=7.0-jessie)](https://travis-ci.org/moodlehq/moodle-php-apache)|Jessie and PHP 7.0 EOL|
-| PHP 5.6      | Jessie  | 5.6-jessie       | [![Build Status](https://travis-ci.org/moodlehq/moodle-php-apache.svg?branch=5.6-jessie)](https://travis-ci.org/moodlehq/moodle-php-apache)|Jessie and PHP 5.6 EOL|
+Nos conectamos a nuestro contenedor de moodle:    
+        docker exec -it servidormd bash
 
-# Example usage
-The following command will expose the current working directory on port 8080:
-```bash
-$ docker run --name web0 -p 8080:80  -v $PWD:/var/www/html moodlehq/moodle-php-apache:7.1
-```
+importar bk de base de datos:
+docker exec -it serverdb bash
+cd /compartida
+mysql -u root -pNuevo123* udemycurso < udemycursov1.sql
 
-# Features
+Instalmos laravel:
+docker exec -it servidorlr composer global require laravel/installer
+Crearmo el proyecto:
+docker exec -it servidorlr composer create-project --prefer-dist laravel/laravel udemy
 
-* Preconfigured with all php extensions required for Moodle development and all database drivers
-* Serves wwroot configured at /var/www/html/
-* Verified by [automated tests](https://travis-ci.org/moodlehq/moodle-php-apache)
+docker exec -it servidorlr bash
 
-# Directories
+nos movemos de directorio:
+cd /var/www/html/udemy/ 
 
-To faciliate testing and easy setup the following directories are created and owned by www-data by default:
-* `/var/www/moodledata`
-* `/var/www/phpunitdata`
-* `/var/www/behatdata`
-* `/var/www/behatfaildumps`
+damos permisos a la carpetas de laralvel, para su ejecución:
+chmod -R 777 ./
+
+En caso de querer generara una nueva llave (ubicarse en la carpeta principal):
+php artisan key:generate
+ponemos el archivo de configuracion en cache (si lo modificamos, lo tenemos que correr), con el fin de hacer mas rapido su acceso de lectura:
+php artisan config:cache
+
+Generamos la autenticación basica de Laravel:
+primero instalamos laravel/ui
+composer require laravel/ui --dev
+Instalamos NPM:
+
+apt install npm
+
+segundo bootstrap como ambiente ui:
+php artisan ui bootstrap
+chmod -R 777 ./
+npm install   
+
+Luego instalamos el tipo de autenticación
+php artisan ui bootstrap --auth
+chmod -R 777 ./
+npm install 
+npm run dev
+
+solucionar problema con babel: 
+npm install --save-dev gulp-babel @babel/core @babel/preset-env
+npm run dev
+
+Antes vamos a nuestro phpmyadmin a crear nuestra base de datos
+php artisan migrate:refresh --seed
+
+Autenticación:
+https://medium.com/@cvallejo/roles-usuarios-laravel-2e1c6123ad
+
+Docker:
+https://cerebro-digital.com/panel/knowledgebase/63/Comandos-frecuentes-de-Docker.html
+
+https://github.com/guzzle/guzzle
+
+http://dev-web.refineddata.com/api/ (de interes para muchos que quieran integrarse con moodle)
+
+token: 18c1d7c41dcb8be04fe229254d97d714
+
+http://127.0.0.1:8082/webservice/rest/server.php?wstoken=18c1d7c41dcb8be04fe229254d97d714&wsfunction=core_course_get_courses&moodlewsrestformat=json
+http://127.0.0.1:8082/user/editadvanced.php?id=-1
 
 
-# See also
-This container is part of a set of containers for Moodle development, see also:
-* [moodle-docker](https://github.com/moodlehq/moodle-docker) a docker-composer based set of tools to get Moodle development running with zero configuration
-* [moodle-db-mssql](https://github.com/moodlehq/moodle-db-mssql) Microsoft SQL Server for Linux configured for Moodle development
-* [moodle-db-oracle](https://github.com/moodlehq/moodle-db-oracle) Oracle XE configured for Moodle development
+core_course_get_categories
+core_course_get_courses
+core_course_get_courses_by_field
+core_course_get_enrolled_users_by_cmid
+core_enrol_get_enrolled_users
+core_enrol_get_users_courses
+core_group_add_group_members
+core_user_update_users
+enrol_manual_unenrol_users
+
+core_group_get_course_groups
+core_role_assign_roles
+core_role_unassign_roles
+core_user_create_users
+core_user_get_course_user_profiles
+core_user_get_users
+core_user_get_users_by_field
+enrol_manual_enrol_users
+
+instalar ping:
+        apt-get update && apt-get install -y iputils-ping
+
+php artisan make:model Matricular -m
+
+php artisan make:seeder MatricularTableSeeder
+
+php artisan migrate:refresh --seed
+
+php artisan make:model Paisesmoodle -m
+
+php artisan make:seeder PaisesmoodleTableSeeder
+
+php artisan make:controller MatriculaController
+
+
+
+
+
+
+//npm set audit false
+pico .npmrc
+fund=false
+
+hacer bk de base de datos mysql (opcional):
+cd /compartida
+mysqldump -u root -pNuevo123* udemycurso > udemycursov1.sql
+
+
