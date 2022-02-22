@@ -21,3 +21,17 @@ $ ddev composer update drupal/core-recommended --with-dependencies
 
 //Actualizar base de datos
 ddev drush updb
+
+---------------Exportar/Importar
+
+- Exportar configuracion
+drush cex
+
+- Importar Configuracion
+drush cim
+
+
+
+
+
+
