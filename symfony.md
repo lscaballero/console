@@ -31,6 +31,22 @@ php bin/console make:entity --regenerate App\\Entity\\Animales
 
 //Entidades
 -----
+-- Symfony 3
+- Ver srcitp sql
+php bin/console doctrine:schema:update --dump-sql --em=transactions
+- Ejecutar scripts listados
+php bin/console doctrine:schema:update --force --em=transactions
+- Ejecutar scripts listados con YML en otra base de datos
+php bin/console doctrine:schema:update --force --em=customer
+-- Fin symfony 3
+- Generar entidad a partir de una tabla
+php bin/console doctrine:mapping:import MiBundle yml --filter="TuTabla"
+sudo php bin/console doctrine:mapping:import TransactionModelBundle yml --filter="tigo_digital_payment_benefits_campaign_home" --em=transactions
+
+- Mapear entidades
+bin/console doctrine:mapping:info
+---------------
+
 - Crear Entidad desde cero
 php bin/console make:entity Nombre_Entidad
 - Crear tablas con los esquemas creados
@@ -105,3 +121,8 @@ php bin/console list app
 ---------------
 - crear archivo de traducciones en formato yaml
 php bin/console translation:update --force es_CO --output-format=yaml
+
+//Bundles
+--------------
+ - Crear Bundle v3.0
+ sudo php bin/console generate:bundle --namespace=TigoDigitalBenefitsBundle
