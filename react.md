@@ -50,3 +50,9 @@ json-server archivo.json
 
 #instarlar proptypes
 npm install prop-types
+
+
+# Errores
+- Error Yarn Instalación
+npm config set cache C:\tmp\nodejs\npm-cache --global
+npm install -g create-react-app
