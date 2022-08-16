@@ -141,3 +141,14 @@ Y lo que demos insertar va en este orden:
 
 Ej:
 45 12 \* \* \* <Rutadelarchivo>/archivo.extension
+
+# PHP
+## Escoger versión de php por defecto
+sudo update-alternatives --set php /usr/bin/php7.4
+
+### Desactivar y Activar php para Apache
+ - sudo a2dismod php7.1
+ - sudo a2enmod php7.4
+
+## Instalar extensiones php.4
+sudo apt install -y php7.4-{bcmath,bz2,intl,gd,mbstring,mysql,zip,common}
