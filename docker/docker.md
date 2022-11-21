@@ -10,6 +10,9 @@ docker rm nombre_contenedor = elimina un contenedor
 docker rm \ $(ps -aq) = borra TODOS los contenedores
 docker rm -f $(docker ps -aq) = 
 
+# importar base de datos
+docker exec -i my-mysql-drupal8 mysql -u root --password=admin transacciones < transacciones.sql
+
 //////
 docker run -it ubuntu = entra a la consola de ubuntu
 uname -a = identificar sistema
@@ -54,6 +57,8 @@ $ docker network create --attachable nombre_red = crear una red con docker
 $ docker network connect nombre_red nombre_container
 $ docker network inspect nombre_red = ver redes conectadas a la red nombre_red
 $ docker run -d --name app -p 3000:3000 --env MONGO_URL=mongodb://db:27017/test nombre_imagen = --name -> agrega un nuevo nombre a la union; --env MONGO_URL_mongodb://db:27017/test -> genera una valirable de entorno junto con la ruta y puerto de la base de datos; -> nombre_container = es el container con el cual se va a conectar la base de datos
+# nueva red
+docker network create --subnet 10.130.2.0/24 --gateway 10.130.2.254 nameRED
 
 
 <!-- Docker Compose -->

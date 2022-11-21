@@ -1,4 +1,11 @@
-mysqldump -u root -p --opt ambito > /storage/ambito.sql 
+-- exportar 
+mysqldump -u root -p --opt ambito > /storage/ambito.sql
+mysqldump -u user -p exampledb > respaldo_exampledb.sql -- forma natural
+
+-- importar base de datos a docker
+docker exec -i my-mysql-drupal8 mysql -u root --password=admin transacciones < transacciones.sql
+
+source db.sql -- estando en la base de datos y la copia en el misma ruta
 
 -- structure
 mysqldump -u root --no-data -p ambito > /storage/structureambito.sql

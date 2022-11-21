@@ -1,1 +1,4 @@
-git commit -m "xxx" --no-verify 
+git commit -m "xxx" --no-verify
+
+# Resolver conflictos
+git mergetool
